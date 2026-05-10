@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}เพิ่มรองเท้าใหม่ - Shoe Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h1>➕ เพิ่มรองเท้าใหม่</h1>
+        <hr>
+
+        <!-- ฟอร์มเพิ่มรองเท้า -->
+        <form method="POST" action="/add-shoe">
+            <!-- ฟิลด์: เลือกแบรนด์ -->
+            <div class="mb-3">
+                <label for="brand_id" class="form-label">
+                    <strong>แบรนด์ *</strong>
+                </label>
+                <select class="form-select" id="brand_id" name="brand_id" required>
+                    <option value="">-- เลือกแบรนด์ --</option>
+                    {% for brand in brands %}
+                        <option value="{{ brand['brand_id'] }}">
+                            {{ brand['name'] }} ({{ brand['country'] }})
+                        </option>
+                    {% endfor %}
+                </select>
+                <small class="form-text text-muted">
+                    ✓ เลือกแบรนด์รองเท้า
+                </small>
+            </div>
+
+            <!-- ฟิลด์: ชื่อรุ่น -->
+            <div class="mb-3">
+                <label for="model_name" class="form-label">
+                    <strong>ชื่อรุ่น *</strong>
+                </label>
+                <input type="text" class="form-control" id="model_name" name="model_name" 
+                       placeholder="เช่น Air Force 1" required>
+                <small class="form-text text-muted">
+                    ✓ ใส่ชื่อรุ่นรองเท้า เช่น "Air Force 1" หรือ "Stan Smith"
+                </small>
+            </div>
+
+            <!-- ฟิลด์: หมวดหมู่ -->
+            <div class="mb-3">
+                <label for="category" class="form-label">
+                    <strong>หมวดหมู่ *</strong>
+                </label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="">-- เลือกหมวดหมู่ --</option>
+                    <option value="Casual">Casual (ใจพักษ์ทั่วไป)</option>
+                    <option value="Sports">Sports (กีฬา)</option>
+                    <option value="Running">Running (วิ่ง)</option>
+                    <option value="Basketball">Basketball (บาสเกตบอล)</option>
+                    <option value="Walking">Walking (เดิน)</option>
+                    <option value="Boots">Boots (บูต)</option>
+                    <option value="Sandals">Sandals (รองเท้าแตะ)</option>
+                </select>
+                <small class="form-text text-muted">
+                    ✓ เลือกประเภทของรองเท้า
+                </small>
+            </div>
+
+            <!-- ฟิลด์: ราคา -->
+            <div class="mb-3">
+                <label for="base_price" class="form-label">
+                    <strong>ราคาฐาน (บาท) *</strong>
+                </label>
+                <input type="number" class="form-control" id="base_price" name="base_price" 
+                       placeholder="เช่น 3000" step="0.01" min="0" required>
+                <small class="form-text text-muted">
+                    ✓ ใส่ราคาขายของรองเท้า (จำนวนบวก)
+                </small>
+            </div>
+
+            <hr>
+
+            <!-- ปุ่มส่ง และ ยกเลิก -->
+            <div class="mb-3">
+                <button type="submit" class="btn btn-success btn-lg">
+                    ✓ เพิ่มรองเท้า
+                </button>
+                <a href="/shoes" class="btn btn-secondary btn-lg ms-2">
+                    ✕ ยกเลิก
+                </a>
+            </div>
+        </form>
+
+        <!-- หมายเหตุ -->
+        <div class="alert alert-info mt-3">
+            <strong>💡 หมายเหตุ:</strong> 
+            หลังจากเพิ่มรองเท้า คุณจะสามารถเพิ่ม Variants (ขนาด สี และสต็อก) 
+            ได้ผ่านส่วนการแก้ไขอีกครั้ง
+        </div>
+    </div>
+</div>
+
+{% endblock %}

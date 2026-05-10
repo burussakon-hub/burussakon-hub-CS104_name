@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Shoe Store{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1>📊 Dashboard</h1>
+        <hr>
+    </div>
+</div>
+
+<!-- สถิติการขาย -->
+<div class="row">
+    <!-- บล็อก: รายได้รวม -->
+    <div class="col-md-4 mb-3">
+        <div class="card border-success">
+            <div class="card-body">
+                <h5 class="card-title">💰 รายได้รวม</h5>
+                <p class="card-text display-5 text-success">
+                    ฿ {{ total_revenue }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- บล็อก: จำนวนการขาย -->
+    <div class="col-md-4 mb-3">
+        <div class="card border-info">
+            <div class="card-body">
+                <h5 class="card-title">📦 จำนวนการขาย</h5>
+                <p class="card-text display-5 text-info">
+                    {{ total_sales_count }} ครั้ง
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- บล็อก: จำนวนรองเท้า -->
+    <div class="col-md-4 mb-3">
+        <div class="card border-primary">
+            <div class="card-body">
+                <h5 class="card-title">👟 จำนวนรองเท้า</h5>
+                <p class="card-text display-5 text-primary">
+                    {{ total_shoes }} ชนิด
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<!-- ตารางสินค้าใกล้หมด -->
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="mb-3">⚠️ สินค้าใกล้หมด (Stock < 5)</h3>
+        
+        {% if low_stock %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>แบรนด์</th>
+                            <th>รุ่นรองเท้า</th>
+                            <th>ขนาด</th>
+                            <th>สี</th>
+                            <th class="text-danger">สต็อก</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in low_stock %}
+                            <tr class="{% if item['stock'] == 0 %}table-danger{% else %}table-warning{% endif %}">
+                                <td>{{ item['brand_name'] }}</td>
+                                <td>{{ item['model_name'] }}</td>
+                                <td>{{ item['size'] }}</td>
+                                <td>{{ item['color'] }}</td>
+                                <td><strong>{{ item['stock'] }}</strong></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-success" role="alert">
+                ✓ สินค้าทั้งหมดมีสต็อกเพียงพอ
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3 class="mb-3">📋 ลิงก์ด่วน</h3>
+        <a href="/shoes" class="btn btn-primary me-2">ดูรายการรองเท้า</a>
+        <a href="/add-shoe" class="btn btn-success me-2">เพิ่มรองเท้าใหม่</a>
+        <a href="/sales" class="btn btn-info">ประวัติการขาย</a>
+    </div>
+</div>
+
+{% endblock %}

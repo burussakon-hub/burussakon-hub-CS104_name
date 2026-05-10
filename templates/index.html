@@ -3,98 +3,130 @@
 {% block title %}Dashboard - Shoe Store{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
+<div class="row mb-5">
     <div class="col-md-12">
-        <h1>📊 Dashboard</h1>
-        <hr>
+        <div class="d-flex align-items-center gap-3">
+            <div style="font-size: 3rem;">📊</div>
+            <div>
+                <h1 style="margin: 0;">Dashboard</h1>
+                <p style="color: rgba(255,255,255,0.9); margin: 0.5rem 0 0 0;">สถิติและการจัดการร้านขายรองเท้า</p>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- สถิติการขาย -->
-<div class="row">
+<div class="row mb-5">
     <!-- บล็อก: รายได้รวม -->
-    <div class="col-md-4 mb-3">
-        <div class="card border-success">
-            <div class="card-body">
-                <h5 class="card-title">💰 รายได้รวม</h5>
-                <p class="card-text display-5 text-success">
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card border-0">
+            <div class="card-body text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+                <h5 class="card-title">รายได้รวม</h5>
+                <p style="font-size: 2.5rem; color: #10b981; font-weight: bold; margin: 1rem 0;">
                     ฿ {{ total_revenue }}
                 </p>
+                <p style="color: #64748b; margin: 0;">ยอดรวมทั้งหมด</p>
             </div>
         </div>
     </div>
 
     <!-- บล็อก: จำนวนการขาย -->
-    <div class="col-md-4 mb-3">
-        <div class="card border-info">
-            <div class="card-body">
-                <h5 class="card-title">📦 จำนวนการขาย</h5>
-                <p class="card-text display-5 text-info">
-                    {{ total_sales_count }} ครั้ง
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card border-0">
+            <div class="card-body text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+                <h5 class="card-title">จำนวนการขาย</h5>
+                <p style="font-size: 2.5rem; color: #3b82f6; font-weight: bold; margin: 1rem 0;">
+                    {{ total_sales_count }} <span style="font-size: 1.2rem;">ครั้ง</span>
                 </p>
+                <p style="color: #64748b; margin: 0;">รายการขายทั้งหมด</p>
             </div>
         </div>
     </div>
 
     <!-- บล็อก: จำนวนรองเท้า -->
-    <div class="col-md-4 mb-3">
-        <div class="card border-primary">
-            <div class="card-body">
-                <h5 class="card-title">👟 จำนวนรองเท้า</h5>
-                <p class="card-text display-5 text-primary">
-                    {{ total_shoes }} ชนิด
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card border-0">
+            <div class="card-body text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">👟</div>
+                <h5 class="card-title">จำนวนรองเท้า</h5>
+                <p style="font-size: 2.5rem; color: #6366f1; font-weight: bold; margin: 1rem 0;">
+                    {{ total_shoes }} <span style="font-size: 1.2rem;">ชนิด</span>
                 </p>
+                <p style="color: #64748b; margin: 0;">สินค้าทั้งหมด</p>
             </div>
         </div>
     </div>
 </div>
 
-<hr>
+<hr style="border-color: rgba(255,255,255,0.2); margin: 2rem 0;">
 
 <!-- ตารางสินค้าใกล้หมด -->
 <div class="row">
     <div class="col-md-12">
-        <h3 class="mb-3">⚠️ สินค้าใกล้หมด (Stock < 5)</h3>
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div style="font-size: 2rem;">⚠️</div>
+            <h3 style="margin: 0;">สินค้าใกล้หมด (Stock < 5)</h3>
+        </div>
         
         {% if low_stock %}
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
+                <table class="table table-hover">
                     <thead class="table-dark">
                         <tr>
-                            <th>แบรนด์</th>
-                            <th>รุ่นรองเท้า</th>
-                            <th>ขนาด</th>
-                            <th>สี</th>
-                            <th class="text-danger">สต็อก</th>
+                            <th><i class="fas fa-tags"></i> แบรนด์</th>
+                            <th><i class="fas fa-shoe-prints"></i> รุ่นรองเท้า</th>
+                            <th><i class="fas fa-ruler"></i> ขนาด</th>
+                            <th><i class="fas fa-palette"></i> สี</th>
+                            <th><i class="fas fa-box"></i> สต็อก</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in low_stock %}
                             <tr class="{% if item['stock'] == 0 %}table-danger{% else %}table-warning{% endif %}">
-                                <td>{{ item['brand_name'] }}</td>
+                                <td><strong>{{ item['brand_name'] }}</strong></td>
                                 <td>{{ item['model_name'] }}</td>
-                                <td>{{ item['size'] }}</td>
-                                <td>{{ item['color'] }}</td>
-                                <td><strong>{{ item['stock'] }}</strong></td>
+                                <td><span class="badge bg-light text-dark">{{ item['size'] }}</span></td>
+                                <td><span class="badge" style="background-color: #{{ '%06x' | format(range(0x000000, 0xFFFFFF) | random) }};">{{ item['color'] }}</span></td>
+                                <td>
+                                    {% if item['stock'] == 0 %}
+                                        <span class="badge bg-danger">❌ {{ item['stock'] }}</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">⚠️ {{ item['stock'] }}</span>
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         {% else %}
-            <div class="alert alert-success" role="alert">
-                ✓ สินค้าทั้งหมดมีสต็อกเพียงพอ
+            <div class="alert alert-success border-0" role="alert" style="background: rgba(16, 185, 129, 0.15); padding: 1.5rem; border-radius: 12px;">
+                <i class="fas fa-check-circle" style="color: #10b981; margin-right: 1rem;"></i>
+                <strong>ยอดเยี่ยม!</strong> สินค้าทั้งหมดมีสต็อกเพียงพอ
             </div>
         {% endif %}
     </div>
 </div>
 
-<div class="row mt-4">
+<hr style="border-color: rgba(255,255,255,0.2); margin: 2rem 0;">
+
+<!-- ลิงก์ด่วน -->
+<div class="row mt-4 mb-5">
     <div class="col-md-12">
-        <h3 class="mb-3">📋 ลิงก์ด่วน</h3>
-        <a href="/shoes" class="btn btn-primary me-2">ดูรายการรองเท้า</a>
-        <a href="/add-shoe" class="btn btn-success me-2">เพิ่มรองเท้าใหม่</a>
-        <a href="/sales" class="btn btn-info">ประวัติการขาย</a>
+        <h3 class="mb-4">🔗 ลิงก์ด่วน</h3>
+        <div class="d-flex flex-wrap gap-3">
+            <a href="/shoes" class="btn btn-primary btn-lg">
+                <i class="fas fa-list"></i> ดูรายการรองเท้า
+            </a>
+            <a href="/add-shoe" class="btn btn-success btn-lg">
+                <i class="fas fa-plus-circle"></i> เพิ่มรองเท้าใหม่
+            </a>
+            <a href="/sales" class="btn btn-info btn-lg">
+                <i class="fas fa-chart-bar"></i> ประวัติการขาย
+            </a>
+        </div>
     </div>
 </div>
 

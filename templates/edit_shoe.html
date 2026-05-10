@@ -3,93 +3,106 @@
 {% block title %}แก้ไขรองเท้า - Shoe Store{% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row mb-5">
     <div class="col-md-8 mx-auto">
-        <h1>✏️ แก้ไขข้อมูลรองเท้า</h1>
-        <hr>
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div style="font-size: 3rem;">✏️</div>
+            <div>
+                <h1 style="margin: 0;">แก้ไขข้อมูลรองเท้า</h1>
+                <p style="color: rgba(255,255,255,0.9); margin: 0;">ปรับปรุงข้อมูลสินค้า</p>
+            </div>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.2);">
 
         <!-- ฟอร์มแก้ไขรองเท้า -->
         <form method="POST" action="/edit-shoe/{{ shoe['shoe_id'] }}">
-            <!-- ฟิลด์: เลือกแบรนด์ -->
-            <div class="mb-3">
-                <label for="brand_id" class="form-label">
-                    <strong>แบรนด์ *</strong>
-                </label>
-                <select class="form-select" id="brand_id" name="brand_id" required>
-                    <option value="">-- เลือกแบรนด์ --</option>
-                    {% for brand in brands %}
-                        <option value="{{ brand['brand_id'] }}"
-                                {% if brand['brand_id'] == shoe['brand_id'] %}selected{% endif %}>
-                            {{ brand['name'] }} ({{ brand['country'] }})
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
+            <div class="card border-0 mb-4">
+                <div class="card-body">
+                    <!-- ฟิลด์: เลือกแบรนด์ -->
+                    <div class="mb-4">
+                        <label for="brand_id" class="form-label">
+                            <i class="fas fa-tags"></i> <strong>แบรนด์ *</strong>
+                        </label>
+                        <select class="form-select form-select-lg" id="brand_id" name="brand_id" required>
+                            <option value="">-- เลือกแบรนด์ --</option>
+                            {% for brand in brands %}
+                                <option value="{{ brand['brand_id'] }}"
+                                        {% if brand['brand_id'] == shoe['brand_id'] %}selected{% endif %}>
+                                    {{ brand['name'] }} ({{ brand['country'] }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-            <!-- ฟิลด์: ชื่อรุ่น -->
-            <div class="mb-3">
-                <label for="model_name" class="form-label">
-                    <strong>ชื่อรุ่น *</strong>
-                </label>
-                <input type="text" class="form-control" id="model_name" name="model_name" 
-                       value="{{ shoe['model_name'] }}" required>
-            </div>
+                    <!-- ฟิลด์: ชื่อรุ่น -->
+                    <div class="mb-4">
+                        <label for="model_name" class="form-label">
+                            <i class="fas fa-shoe-prints"></i> <strong>ชื่อรุ่น *</strong>
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="model_name" name="model_name" 
+                               value="{{ shoe['model_name'] }}" required>
+                    </div>
 
-            <!-- ฟิลด์: หมวดหมู่ -->
-            <div class="mb-3">
-                <label for="category" class="form-label">
-                    <strong>หมวดหมู่ *</strong>
-                </label>
-                <select class="form-select" id="category" name="category" required>
-                    <option value="Casual" {% if shoe['category'] == 'Casual' %}selected{% endif %}>
-                        Casual
-                    </option>
-                    <option value="Sports" {% if shoe['category'] == 'Sports' %}selected{% endif %}>
-                        Sports
-                    </option>
-                    <option value="Running" {% if shoe['category'] == 'Running' %}selected{% endif %}>
-                        Running
-                    </option>
-                    <option value="Basketball" {% if shoe['category'] == 'Basketball' %}selected{% endif %}>
-                        Basketball
-                    </option>
-                    <option value="Walking" {% if shoe['category'] == 'Walking' %}selected{% endif %}>
-                        Walking
-                    </option>
-                    <option value="Boots" {% if shoe['category'] == 'Boots' %}selected{% endif %}>
-                        Boots
-                    </option>
-                    <option value="Sandals" {% if shoe['category'] == 'Sandals' %}selected{% endif %}>
-                        Sandals
-                    </option>
-                </select>
-            </div>
+                    <!-- ฟิลด์: หมวดหมู่ -->
+                    <div class="mb-4">
+                        <label for="category" class="form-label">
+                            <i class="fas fa-list"></i> <strong>หมวดหมู่ *</strong>
+                        </label>
+                        <select class="form-select form-select-lg" id="category" name="category" required>
+                            <option value="Casual" {% if shoe['category'] == 'Casual' %}selected{% endif %}>
+                                Casual
+                            </option>
+                            <option value="Sports" {% if shoe['category'] == 'Sports' %}selected{% endif %}>
+                                Sports
+                            </option>
+                            <option value="Running" {% if shoe['category'] == 'Running' %}selected{% endif %}>
+                                Running
+                            </option>
+                            <option value="Basketball" {% if shoe['category'] == 'Basketball' %}selected{% endif %}>
+                                Basketball
+                            </option>
+                            <option value="Walking" {% if shoe['category'] == 'Walking' %}selected{% endif %}>
+                                Walking
+                            </option>
+                            <option value="Boots" {% if shoe['category'] == 'Boots' %}selected{% endif %}>
+                                Boots
+                            </option>
+                            <option value="Sandals" {% if shoe['category'] == 'Sandals' %}selected{% endif %}>
+                                Sandals
+                            </option>
+                        </select>
+                    </div>
 
-            <!-- ฟิลด์: ราคา -->
-            <div class="mb-3">
-                <label for="base_price" class="form-label">
-                    <strong>ราคาฐาน (บาท) *</strong>
-                </label>
-                <input type="number" class="form-control" id="base_price" name="base_price" 
-                       value="{{ shoe['base_price'] }}" step="0.01" min="0" required>
+                    <!-- ฟิลด์: ราคา -->
+                    <div class="mb-4">
+                        <label for="base_price" class="form-label">
+                            <i class="fas fa-tag"></i> <strong>ราคาฐาน (บาท) *</strong>
+                        </label>
+                        <input type="number" class="form-control form-control-lg" id="base_price" name="base_price" 
+                               value="{{ shoe['base_price'] }}" step="0.01" min="0" required>
+                    </div>
+                </div>
             </div>
-
-            <hr>
 
             <!-- ปุ่มบันทึก และ ยกเลิก -->
-            <div class="mb-3">
-                <button type="submit" class="btn btn-warning btn-lg">
-                    💾 บันทึกการเปลี่ยนแปลง
+            <div class="d-flex gap-3 mt-5">
+                <button type="submit" class="btn btn-warning btn-lg flex-grow-1">
+                    <i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง
                 </button>
-                <a href="/shoes" class="btn btn-secondary btn-lg ms-2">
-                    ✕ ยกเลิก
+                <a href="/shoes" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-times-circle"></i> ยกเลิก
                 </a>
             </div>
         </form>
 
         <!-- ข้อมูลเพิ่มเติม -->
-        <div class="alert alert-secondary mt-3">
-            <strong>ID รองเท้า:</strong> {{ shoe['shoe_id'] }}
+        <div class="card border-0 mt-5" style="background: rgba(148, 163, 184, 0.1); border-radius: 12px;">
+            <div class="card-body">
+                <p style="margin: 0;">
+                    <i class="fas fa-info-circle"></i> <strong>ID รองเท้า:</strong> <code>{{ shoe['shoe_id'] }}</code>
+                </p>
+            </div>
         </div>
     </div>
 </div>

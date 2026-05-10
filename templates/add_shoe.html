@@ -3,93 +3,106 @@
 {% block title %}เพิ่มรองเท้าใหม่ - Shoe Store{% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row mb-5">
     <div class="col-md-8 mx-auto">
-        <h1>➕ เพิ่มรองเท้าใหม่</h1>
-        <hr>
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div style="font-size: 3rem;">➕</div>
+            <div>
+                <h1 style="margin: 0;">เพิ่มรองเท้าใหม่</h1>
+                <p style="color: rgba(255,255,255,0.9); margin: 0;">เพิ่มสินค้าใหม่เข้าระบบ</p>
+            </div>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.2);">
 
         <!-- ฟอร์มเพิ่มรองเท้า -->
         <form method="POST" action="/add-shoe">
-            <!-- ฟิลด์: เลือกแบรนด์ -->
-            <div class="mb-3">
-                <label for="brand_id" class="form-label">
-                    <strong>แบรนด์ *</strong>
-                </label>
-                <select class="form-select" id="brand_id" name="brand_id" required>
-                    <option value="">-- เลือกแบรนด์ --</option>
-                    {% for brand in brands %}
-                        <option value="{{ brand['brand_id'] }}">
-                            {{ brand['name'] }} ({{ brand['country'] }})
-                        </option>
-                    {% endfor %}
-                </select>
-                <small class="form-text text-muted">
-                    ✓ เลือกแบรนด์รองเท้า
-                </small>
-            </div>
+            <div class="card border-0 mb-4">
+                <div class="card-body">
+                    <!-- ฟิลด์: เลือกแบรนด์ -->
+                    <div class="mb-4">
+                        <label for="brand_id" class="form-label">
+                            <i class="fas fa-tags"></i> <strong>แบรนด์ *</strong>
+                        </label>
+                        <select class="form-select form-select-lg" id="brand_id" name="brand_id" required>
+                            <option value="">-- เลือกแบรนด์ --</option>
+                            {% for brand in brands %}
+                                <option value="{{ brand['brand_id'] }}">
+                                    {{ brand['name'] }} ({{ brand['country'] }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <small class="form-text text-muted d-block mt-2">
+                            <i class="fas fa-info-circle"></i> เลือกแบรนด์รองเท้า
+                        </small>
+                    </div>
 
-            <!-- ฟิลด์: ชื่อรุ่น -->
-            <div class="mb-3">
-                <label for="model_name" class="form-label">
-                    <strong>ชื่อรุ่น *</strong>
-                </label>
-                <input type="text" class="form-control" id="model_name" name="model_name" 
-                       placeholder="เช่น Air Force 1" required>
-                <small class="form-text text-muted">
-                    ✓ ใส่ชื่อรุ่นรองเท้า เช่น "Air Force 1" หรือ "Stan Smith"
-                </small>
-            </div>
+                    <!-- ฟิลด์: ชื่อรุ่น -->
+                    <div class="mb-4">
+                        <label for="model_name" class="form-label">
+                            <i class="fas fa-shoe-prints"></i> <strong>ชื่อรุ่น *</strong>
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="model_name" name="model_name" 
+                               placeholder="เช่น Air Force 1" required>
+                        <small class="form-text text-muted d-block mt-2">
+                            <i class="fas fa-info-circle"></i> ใส่ชื่อรุ่นรองเท้า เช่น "Air Force 1" หรือ "Stan Smith"
+                        </small>
+                    </div>
 
-            <!-- ฟิลด์: หมวดหมู่ -->
-            <div class="mb-3">
-                <label for="category" class="form-label">
-                    <strong>หมวดหมู่ *</strong>
-                </label>
-                <select class="form-select" id="category" name="category" required>
-                    <option value="">-- เลือกหมวดหมู่ --</option>
-                    <option value="Casual">Casual (ใจพักษ์ทั่วไป)</option>
-                    <option value="Sports">Sports (กีฬา)</option>
-                    <option value="Running">Running (วิ่ง)</option>
-                    <option value="Basketball">Basketball (บาสเกตบอล)</option>
-                    <option value="Walking">Walking (เดิน)</option>
-                    <option value="Boots">Boots (บูต)</option>
-                    <option value="Sandals">Sandals (รองเท้าแตะ)</option>
-                </select>
-                <small class="form-text text-muted">
-                    ✓ เลือกประเภทของรองเท้า
-                </small>
-            </div>
+                    <!-- ฟิลด์: หมวดหมู่ -->
+                    <div class="mb-4">
+                        <label for="category" class="form-label">
+                            <i class="fas fa-list"></i> <strong>หมวดหมู่ *</strong>
+                        </label>
+                        <select class="form-select form-select-lg" id="category" name="category" required>
+                            <option value="">-- เลือกหมวดหมู่ --</option>
+                            <option value="Casual">Casual (ใจพักษ์ทั่วไป)</option>
+                            <option value="Sports">Sports (กีฬา)</option>
+                            <option value="Running">Running (วิ่ง)</option>
+                            <option value="Basketball">Basketball (บาสเกตบอล)</option>
+                            <option value="Walking">Walking (เดิน)</option>
+                            <option value="Boots">Boots (บูต)</option>
+                            <option value="Sandals">Sandals (รองเท้าแตะ)</option>
+                        </select>
+                        <small class="form-text text-muted d-block mt-2">
+                            <i class="fas fa-info-circle"></i> เลือกประเภทของรองเท้า
+                        </small>
+                    </div>
 
-            <!-- ฟิลด์: ราคา -->
-            <div class="mb-3">
-                <label for="base_price" class="form-label">
-                    <strong>ราคาฐาน (บาท) *</strong>
-                </label>
-                <input type="number" class="form-control" id="base_price" name="base_price" 
-                       placeholder="เช่น 3000" step="0.01" min="0" required>
-                <small class="form-text text-muted">
-                    ✓ ใส่ราคาขายของรองเท้า (จำนวนบวก)
-                </small>
+                    <!-- ฟิลด์: ราคา -->
+                    <div class="mb-4">
+                        <label for="base_price" class="form-label">
+                            <i class="fas fa-tag"></i> <strong>ราคาฐาน (บาท) *</strong>
+                        </label>
+                        <input type="number" class="form-control form-control-lg" id="base_price" name="base_price" 
+                               placeholder="เช่น 3000" step="0.01" min="0" required>
+                        <small class="form-text text-muted d-block mt-2">
+                            <i class="fas fa-info-circle"></i> ใส่ราคาขายของรองเท้า (จำนวนบวก)
+                        </small>
+                    </div>
+                </div>
             </div>
-
-            <hr>
 
             <!-- ปุ่มส่ง และ ยกเลิก -->
-            <div class="mb-3">
-                <button type="submit" class="btn btn-success btn-lg">
-                    ✓ เพิ่มรองเท้า
+            <div class="d-flex gap-3 mt-5">
+                <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                    <i class="fas fa-check-circle"></i> เพิ่มรองเท้า
                 </button>
-                <a href="/shoes" class="btn btn-secondary btn-lg ms-2">
-                    ✕ ยกเลิก
+                <a href="/shoes" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-times-circle"></i> ยกเลิก
                 </a>
             </div>
         </form>
 
         <!-- หมายเหตุ -->
-        <div class="alert alert-info mt-3">
-            <strong>💡 หมายเหตุ:</strong> 
-            หลังจากเพิ่มรองเท้า คุณจะสามารถเพิ่ม Variants (ขนาด สี และสต็อก) 
-            ได้ผ่านส่วนการแก้ไขอีกครั้ง
+        <div class="card border-0 mt-5" style="background: rgba(59, 130, 246, 0.1); border-radius: 12px;">
+            <div class="card-body">
+                <p style="margin: 0;">
+                    <i class="fas fa-lightbulb" style="color: #3b82f6;"></i> <strong>หมายเหตุ:</strong> 
+                    หลังจากเพิ่มรองเท้า คุณจะสามารถเพิ่ม Variants (ขนาด สี และสต็อก) 
+                    ได้ผ่านส่วนการแก้ไขอีกครั้ง
+                </p>
+            </div>
         </div>
     </div>
 </div>

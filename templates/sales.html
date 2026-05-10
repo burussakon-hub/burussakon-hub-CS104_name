@@ -1,112 +1,82 @@
 {% extends "base.html" %}
 
-{% block title %}ประวัติการขาย - Shoe Store{% endblock %}
+{% block title %}Sales Report - ShoeStore{% endblock %}
 
 {% block content %}
+<!-- Header -->
 <div class="row mb-5">
     <div class="col-md-12">
-        <div class="d-flex align-items-center gap-3">
-            <div style="font-size: 3rem;">📊</div>
-            <div>
-                <h1 style="margin: 0;">ประวัติการขาย</h1>
-                <p style="color: rgba(255,255,255,0.9); margin: 0;">บันทึกการขายสินค้าทั้งหมด</p>
-            </div>
-        </div>
+        <h1>Sales Report</h1>
+        <p class="subtitle">Complete transaction history</p>
     </div>
 </div>
 
-<hr style="border-color: rgba(255,255,255,0.2); margin: 2rem 0;">
+<hr>
 
-<!-- ตารางแสดงประวัติการขาย -->
-<div class="row">
+<!-- Sales Table -->
+<div class="row mb-5">
     <div class="col-md-12">
         {% if sales %}
             <div class="table-responsive">
                 <table class="table table-hover">
-                    <thead class="table-dark">
+                    <thead>
                         <tr>
-                            <th style="width: 5%;">#</th>
-                            <th style="width: 15%;"><i class="fas fa-calendar"></i> วันที่ขาย</th>
-                            <th style="width: 15%;"><i class="fas fa-user"></i> ชื่อลูกค้า</th>
-                            <th style="width: 15%;"><i class="fas fa-tags"></i> แบรนด์</th>
-                            <th style="width: 18%;"><i class="fas fa-shoe-prints"></i> รุ่นรองเท้า</th>
-                            <th style="width: 7%;"><i class="fas fa-ruler"></i> ขนาด</th>
-                            <th style="width: 10%;"><i class="fas fa-palette"></i> สี</th>
-                            <th style="width: 7%;"><i class="fas fa-box"></i> จำนวน</th>
-                            <th style="width: 12%;"><i class="fas fa-money-bill-wave"></i> ราคารวม</th>
+                            <th>ID</th>
+                            <th>DATE</th>
+                            <th>CUSTOMER</th>
+                            <th>BRAND</th>
+                            <th>MODEL</th>
+                            <th>SIZE</th>
+                            <th>COLOR</th>
+                            <th>QTY</th>
+                            <th>TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- loop แสดงข้อมูลการขาย -->
                         {% for sale in sales %}
                             <tr>
                                 <td><strong>{{ loop.index }}</strong></td>
                                 <td>
-                                    <small>
-                                        <i class="fas fa-clock"></i>
-                                        {% set sale_datetime = sale['sale_date'].split(' ')[0] %}
-                                        {{ sale_datetime }}
-                                    </small>
+                                    {% set sale_datetime = sale['sale_date'].split(' ')[0] %}
+                                    {{ sale_datetime }}
                                 </td>
-                                <td><strong style="color: #6366f1;">{{ sale['customer_name'] }}</strong></td>
-                                <td><strong>{{ sale['brand_name'] }}</strong></td>
+                                <td><strong style="color: #ff6b35;">{{ sale['customer_name'] }}</strong></td>
+                                <td>{{ sale['brand_name'] }}</td>
                                 <td>{{ sale['model_name'] }}</td>
-                                <td>
-                                    <span class="badge bg-light text-dark">
-                                        <i class="fas fa-shoe-prints"></i> {{ sale['size'] }}
-                                    </span>
-                                </td>
+                                <td><span class="badge bg-light text-dark">{{ sale['size'] }}</span></td>
                                 <td>
                                     <span class="badge" style="background-color: #{{ '%06x' | format(range(0x000000, 0xFFFFFF) | random) }};">
                                         {{ sale['color'] }}
                                     </span>
                                 </td>
-                                <td>
-                                    <strong>{{ sale['quantity'] }}</strong> 
-                                    <span style="color: #64748b; font-size: 0.85rem;">คู่</span>
-                                </td>
-                                <td>
-                                    <strong style="color: #10b981; font-size: 1.1rem;">
-                                        ฿ {{ "%.2f"|format(sale['total_price']) }}
-                                    </strong>
-                                </td>
+                                <td><strong>{{ sale['quantity'] }}</strong></td>
+                                <td><strong style="color: #ff6b35;">฿{{ "%.2f"|format(sale['total_price']) }}</strong></td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
 
-            <!-- สรุปสถิติ -->
+            <!-- Stats -->
             <div class="row mt-5">
                 <div class="col-lg-6 mb-4">
-                    <div class="card border-0">
-                        <div class="card-body text-center">
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">💰</div>
-                            <h5 class="card-title">รายได้รวม</h5>
-                            <p style="font-size: 2rem; color: #10b981; font-weight: bold; margin: 1rem 0;">
-                                ฿ {% set total = sales | map(attribute='total_price') | sum %}{{ "%.2f"|format(total) }}
-                            </p>
-                        </div>
+                    <div class="stat-card">
+                        <div style="font-size: 2rem;">💰</div>
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value">฿{% set total = sales | map(attribute='total_price') | sum %}{{ "%.2f"|format(total) }}</div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card border-0">
-                        <div class="card-body text-center">
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📦</div>
-                            <h5 class="card-title">จำนวนการขาย</h5>
-                            <p style="font-size: 2rem; color: #3b82f6; font-weight: bold; margin: 1rem 0;">
-                                {{ sales | length }} <span style="font-size: 0.8rem;">รายการ</span>
-                            </p>
-                        </div>
+                    <div class="stat-card">
+                        <div style="font-size: 2rem;">📦</div>
+                        <div class="stat-label">Total Transactions</div>
+                        <div class="stat-value">{{ sales | length }}</div>
                     </div>
                 </div>
             </div>
         {% else %}
-            <!-- ข้อความเมื่อไม่มีประวัติการขาย -->
-            <div class="alert alert-info border-0" role="alert" style="background: rgba(59, 130, 246, 0.15); padding: 3rem 2rem; border-radius: 12px; text-align: center;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
-                <h5>ยังไม่มีประวัติการขาย</h5>
-                <p style="margin: 1rem 0;">เมื่อมีการขายสินค้า จะแสดงเป็นรายการที่นี่</p>
+            <div class="alert alert-info">
+                No sales transactions yet.
             </div>
         {% endif %}
     </div>

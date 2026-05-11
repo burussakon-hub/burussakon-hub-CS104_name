@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Add Sale - ShoeStore{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-md-8 mx-auto">
+        <h1>Add New Sale</h1>
+        <p class="subtitle">Record a new shoe sale transaction</p>
+
+        <hr>
+
+        <!-- Form -->
+        <form method="POST" action="/add-sale" id="saleForm">
+            <div class="card border-0 mb-4">
+                <div class="card-body">
+                    <!-- Customer Field -->
+                    <div class="mb-4">
+                        <label for="customer_id" class="form-label">CUSTOMER *</label>
+                        <select class="form-select form-select-lg" id="customer_id" name="customer_id" required>
+                            <option value="">Select Customer</option>
+                            {% for customer in customers %}
+                                <option value="{{ customer['customer_id'] }}">
+                                    {{ customer['name'] }}{% if customer['phone'] %} - {{ customer['phone'] }}{% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Variant Field -->
+                    <div class="mb-4">
+                        <label for="variant_id" class="form-label">PRODUCT VARIANT *</label>
+                        <select class="form-select form-select-lg" id="variant_id" name="variant_id" required onchange="updatePrice()">
+                            <option value="">Select Product Variant</option>
+                            {% for variant in variants %}
+                                <option value="{{ variant['variant_id'] }}" data-price="{{ variant['base_price'] }}">
+                                    {{ variant['brand_name'] }} {{ variant['model_name'] }} - Size: {{ variant['size'] }}, Color: {{ variant['color'] }} (Stock: {{ variant['stock'] }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Quantity Field -->
+                    <div class="mb-4">
+                        <label for="quantity" class="form-label">QUANTITY *</label>
+                        <input type="number" class="form-control form-control-lg" id="quantity" name="quantity"
+                               placeholder="1" min="1" required onchange="calculateTotal()" onkeyup="calculateTotal()">
+                    </div>
+
+                    <!-- Price Display -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">UNIT PRICE</label>
+                            <div class="form-control form-control-lg bg-secondary text-white" id="unitPrice" readonly>
+                                ฿0.00
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">TOTAL PRICE</label>
+                            <div class="form-control form-control-lg bg-primary text-white" id="totalPrice" readonly>
+                                ฿0.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-3 mt-5">
+                <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                    <i class="fas fa-shopping-cart"></i> Complete Sale
+                </button>
+                <a href="/sales" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function updatePrice() {
+    const variantSelect = document.getElementById('variant_id');
+    const selectedOption = variantSelect.options[variantSelect.selectedIndex];
+    const unitPrice = selectedOption.getAttribute('data-price') || 0;
+    document.getElementById('unitPrice').textContent = '฿' + parseFloat(unitPrice).toFixed(2);
+    calculateTotal();
+}
+
+function calculateTotal() {
+    const unitPriceText = document.getElementById('unitPrice').textContent.replace('฿', '');
+    const unitPrice = parseFloat(unitPriceText) || 0;
+    const quantity = parseInt(document.getElementById('quantity').value) || 0;
+    const total = unitPrice * quantity;
+    document.getElementById('totalPrice').textContent = '฿' + total.toFixed(2);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updatePrice();
+});
+</script>
+{% endblock %}

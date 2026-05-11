@@ -460,8 +460,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/shoes"><i class="fas fa-shoe-prints"></i> Shop</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/sales"><i class="fas fa-chart-bar"></i> Sales</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="salesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chart-bar"></i> Sales
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="salesDropdown">
+                            <li><a class="dropdown-item" href="/sales"><i class="fas fa-list"></i> View Sales</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/add-sale"><i class="fas fa-plus"></i> Add Sale</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

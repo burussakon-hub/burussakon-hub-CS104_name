@@ -351,6 +351,104 @@ def sales():
         flash(f'เกิดข้อผิดพลาด: {str(e)}', 'danger')
         return redirect(url_for('dashboard'))
 
+# ======================== ADD SALE ========================
+
+@app.route('/add-sale', methods=['GET', 'POST'])
+def add_sale():
+    """หน้าเพิ่มการขายใหม่"""
+    try:
+        if request.method == 'POST':
+            customer_id = request.form.get('customer_id')
+            variant_id = request.form.get('variant_id')
+            quantity = request.form.get('quantity')
+
+            # ตรวจสอบข้อมูลที่จำเป็น
+            if not all([customer_id, variant_id, quantity]):
+                flash('กรุณากรอกข้อมูลทั้งหมด', 'warning')
+                return redirect(url_for('add_sale'))
+
+            try:
+                quantity = int(quantity)
+                if quantity <= 0:
+                    flash('จำนวนต้องมากกว่า 0', 'warning')
+                    return redirect(url_for('add_sale'))
+            except ValueError:
+                flash('จำนวนต้องเป็นตัวเลข', 'warning')
+                return redirect(url_for('add_sale'))
+
+            conn = get_db()
+            cursor = conn.cursor()
+
+            # ตรวจสอบ stock และคำนวณราคา
+            cursor.execute('''
+                SELECT v.stock, s.base_price
+                FROM variants v
+                JOIN shoes s ON v.shoe_id = s.shoe_id
+                WHERE v.variant_id = ?
+            ''', (variant_id,))
+            variant_data = cursor.fetchone()
+
+            if not variant_data:
+                flash('ไม่พบข้อมูลสินค้า', 'danger')
+                conn.close()
+                return redirect(url_for('add_sale'))
+
+            stock = variant_data['stock']
+            base_price = variant_data['base_price']
+
+            if quantity > stock:
+                flash(f'สต็อกไม่เพียงพอ (มีอยู่ {stock} ชิ้น)', 'warning')
+                conn.close()
+                return redirect(url_for('add_sale'))
+
+            total_price = quantity * base_price
+
+            # บันทึกการขาย
+            cursor.execute('''
+                INSERT INTO sales (customer_id, variant_id, quantity, total_price)
+                VALUES (?, ?, ?, ?)
+            ''', (customer_id, variant_id, quantity, total_price))
+
+            # อัปเดต stock
+            cursor.execute('''
+                UPDATE variants
+                SET stock = stock - ?
+                WHERE variant_id = ?
+            ''', (quantity, variant_id))
+
+            conn.commit()
+            conn.close()
+
+            flash('บันทึกการขายสำเร็จ!', 'success')
+            return redirect(url_for('sales'))
+
+        # GET request - ดึงข้อมูลสำหรับ dropdown
+        conn = get_db()
+        cursor = conn.cursor()
+
+        # ดึงข้อมูลลูกค้า
+        cursor.execute('SELECT customer_id, name, phone FROM customers ORDER BY name')
+        customers = cursor.fetchall()
+
+        # ดึงข้อมูล variants พร้อมรายละเอียด
+        cursor.execute('''
+            SELECT v.variant_id, s.model_name, b.name as brand_name,
+                   v.size, v.color, v.stock, s.base_price
+            FROM variants v
+            JOIN shoes s ON v.shoe_id = s.shoe_id
+            JOIN brands b ON s.brand_id = b.brand_id
+            WHERE v.stock > 0
+            ORDER BY s.model_name, v.size, v.color
+        ''')
+        variants = cursor.fetchall()
+
+        conn.close()
+
+        return render_template('add_sale.html', customers=customers, variants=variants)
+    except Exception as e:
+        flash(f'เกิดข้อผิดพลาด: {str(e)}', 'danger')
+        return redirect(url_for('sales'))
+
 # ======================== API ENDPOINTS FOR VARIANTS ========================
 
 @app.route('/api/shoe/<int:shoe_id>')

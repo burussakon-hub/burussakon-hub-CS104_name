@@ -8,8 +8,17 @@ from datetime import datetime, timedelta
 
 DATABASE = 'shoes.db'
 
+# Import init_db from app.py
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
+from app import init_db
+
 def insert_mock_data():
     """เพิ่มข้อมูลตัวอย่างลงในฐานข้อมูล"""
+    # สร้างตารางก่อน
+    init_db()
+    
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     

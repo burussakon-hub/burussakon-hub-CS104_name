@@ -157,7 +157,7 @@ def shoes():
         
         # ดึงข้อมูลรองเท้า JOIN กับแบรนด์และ variants
         cursor.execute('''
-            SELECT s.shoe_id, s.model_name, s.category, s.base_price,
+            SELECT s.shoe_id, s.model_name, s.category, s.base_price, s.image_url,
                    b.name as brand_name, COUNT(v.variant_id) as total_variants,
                    SUM(v.stock) as total_stock
             FROM shoes s

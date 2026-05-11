@@ -44,9 +44,16 @@ def init_db():
             model_name TEXT NOT NULL,
             category TEXT NOT NULL,
             base_price REAL NOT NULL,
+            image_url TEXT,
             FOREIGN KEY (brand_id) REFERENCES brands(brand_id) ON DELETE CASCADE
         )
     ''')
+    
+    # ปรับ schema หากตารางเก่าไม่มีคอลัมน์รูปภาพ
+    cursor.execute("PRAGMA table_info(shoes)")
+    shoe_columns = [row[1] for row in cursor.fetchall()]
+    if 'image_url' not in shoe_columns:
+        cursor.execute('ALTER TABLE shoes ADD COLUMN image_url TEXT')
     
     # ตาราง Variants - เก็บข้อมูลขนาด สีและสต็อก
     cursor.execute('''
@@ -127,17 +134,17 @@ def dashboard():
         conn.close()
         
         return render_template('index.html', 
-                             total_revenue=f"{total_revenue:.2f}",
+                             total_revenue=f"{revenue:.2f}",
                              total_sales_count=total_sales_count,
                              total_shoes=total_shoes,
                              low_stock=low_stock)
     except Exception as e:
         flash(f'เกิดข้อผิดพลาด: {str(e)}', 'danger')
-        return render_template('index.html', 
-                             total_revenue="0.00",
-                             total_sales_count=0,
-                             total_shoes=0,
-                             low_stock=[])
+        return render_template('index.html',
+                            total_revenue=0,
+                            total_sales_count=0,
+                            total_shoes=0,
+                            low_stock=[])
 
 # ======================== SHOES LIST & DISPLAY ========================
 
@@ -192,15 +199,17 @@ def add_shoe():
             except ValueError:
                 flash('ราคาต้องเป็นตัวเลข', 'warning')
                 return redirect(url_for('add_shoe'))
+
+            image_url = request.form.get('image_url', '').strip()
             
             conn = get_db()
             cursor = conn.cursor()
             
             # บันทึกรองเท้าใหม่
             cursor.execute('''
-                INSERT INTO shoes (brand_id, model_name, category, base_price)
-                VALUES (?, ?, ?, ?)
-            ''', (brand_id, model_name, category, base_price))
+                INSERT INTO shoes (brand_id, model_name, category, base_price, image_url)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (brand_id, model_name, category, base_price, image_url))
             
             conn.commit()
             conn.close()
@@ -248,13 +257,15 @@ def edit_shoe(shoe_id):
             except ValueError:
                 flash('ราคาต้องเป็นตัวเลข', 'warning')
                 return redirect(url_for('edit_shoe', shoe_id=shoe_id))
+
+            image_url = request.form.get('image_url', '').strip()
             
             # อัปเดตข้อมูลรองเท้า
             cursor.execute('''
                 UPDATE shoes 
-                SET brand_id = ?, model_name = ?, category = ?, base_price = ?
+                SET brand_id = ?, model_name = ?, category = ?, base_price = ?, image_url = ?
                 WHERE shoe_id = ?
-            ''', (brand_id, model_name, category, base_price, shoe_id))
+            ''', (brand_id, model_name, category, base_price, image_url, shoe_id))
             
             conn.commit()
             conn.close()
